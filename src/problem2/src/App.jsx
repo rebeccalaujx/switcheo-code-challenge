@@ -65,16 +65,6 @@ const App = () => {
     }
   }
 
-//   const otpValidation = (otp) => {
-//     const regex = /^\d{6}$/;
-//     if (!regex.test(otp)) {
-//         setOtpState(ViewState.ERROR)
-//         return
-//     }
-//     setOtpState(ViewState.SUCCESS)
-// }
-
-
   return (
     <div className="app">
       <form onSubmit={handleSubmit}>
