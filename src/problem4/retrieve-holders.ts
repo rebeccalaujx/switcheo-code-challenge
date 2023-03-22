@@ -1,4 +1,4 @@
-const { ethers } = require("ethers");
+import { BigNumber, ethers } from "ethers";
 
 const tokenContract: string = "0xc0ecb8499d8da2771abcbf4091db7f65158f1468";
 
@@ -10,16 +10,24 @@ const holderAddresses = [
     "0xd1d8b2aae2ebb2acf013b803bc3c24ca1303a392",
 ];
 
-const abi = ["function balanceOf(address) view returns (uint256)"];
+const abi = [
+    "function balanceOf(address owner) view returns (uint256)",
+];
+
 
 const contract = new ethers.Contract(tokenContract, abi, provider);
 
-holderAddresses.forEach(address => {
-    contract
-        .balanceOf(address)
-        .then(
-            (balance: string) => {
-                console.log(address + ' ' + balance);
-            }
-        );
-})
+function convertBalance(balance: BigNumber, decimals: number) {
+    const formattedBalance = ethers.utils.formatUnits(balance, decimals);
+    return ethers.utils.commify(formattedBalance);
+}
+
+async function getBalance() {
+    for (const address of holderAddresses) {
+        const balance = await contract.balanceOf(address);
+        const balanceOutput = convertBalance(balance, 8);
+        console.log(`${address} ${balanceOutput}`);
+    }
+}
+
+getBalance();
